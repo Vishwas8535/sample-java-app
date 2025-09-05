@@ -26,14 +26,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Running unit tests..."
-                sh 'python3 -m pytest --maxfail=1 --disable-warnings -q'
+                sh 'python3 -m pytest --maxfail=1 --disable-warnings -q --junitxml=pytest-results.xml'
             }
         }
 
         stage('Archive Results') {
             steps {
                 echo "Archiving test reports..."
-                junit '**/test-results.xml' // optional if you generate junit xml
+                junit 'pytest-results.xml'
             }
         }
     }
