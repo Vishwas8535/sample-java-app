@@ -47,24 +47,14 @@ pipeline {
 
         stage('Docker Build & Run') {
             steps {
-                echo "Step 1: Building Docker image..."
+                echo "Building Docker image..."
                 sh 'docker build -t myapp:latest .'
 
-                echo "Step 2: Listing Docker images..."
-                sh 'docker images | grep myapp'
-
-                echo "Step 3: Running container..."
-                sh 'docker run -d --name myapp_container myapp:latest'
-
-                echo "Step 4: Checking running containers..."
-                sh 'docker ps | grep myapp'
-
-                echo "Step 5: Cleaning up container..."
-                sh 'docker stop myapp_container || true'
-                sh 'docker rm myapp_container || true'
+                echo "Running container..."
+                sh 'docker run --rm myapp:latest'
             }
         }
-
+        
         stage('Deploy') {
             steps {
                 echo "Deploying to Development..."
