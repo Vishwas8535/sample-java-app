@@ -43,20 +43,7 @@ pipeline {
             }
         }
 
-        stage('Prepare Dockerfile') {
-            steps {
-                sh '''
-        cat > Dockerfile <<EOF
-        FROM python:3.10-slim
-        WORKDIR /app
-        COPY build/app.py .
-        CMD ["python3", "app.py"]
-        EOF
-                '''
-            }
-        }
-
-
+        
 
         stage('Docker Build & Run') {
             steps {
