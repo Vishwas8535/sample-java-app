@@ -20,13 +20,13 @@ pipeline {
         }
 
         stage('Test') {
-            agent { label 'Slave2' }  // Run tests on Windows node
+            agent { label 'Slave2' } // must be a Linux node
             steps {
-                echo "Running unit tests on Windows node..."
-                bat 'python --version'
-                bat 'pip install pytest --quiet'
-                bat 'echo def test_add():\\n    assert 2 + 3 == 5 > test_app.py'
-                bat 'python -m pytest --maxfail=1 --disable-warnings -q'
+                echo "Running unit tests on Linux node..."
+                sh 'python3 --version'
+                sh 'pip3 install pytest --quiet'
+                sh 'echo "def test_add():\\n    assert 2 + 3 == 5" > test_app.py'
+                sh 'python3 -m pytest --maxfail=1 --disable-warnings -q'
             }
         }
 
