@@ -21,13 +21,14 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Running unit tests..."
-                // create a simple test file
+                sh 'pip3 install pytest --quiet'
                 sh '''
-                    echo "def test_add():\\n    assert 2 + 3 == 5" > test_app.py
+                echo "def test_add():\\n    assert 2 + 3 == 5" > test_app.py
                 '''
                 sh 'pytest --maxfail=1 --disable-warnings -q'
             }
         }
+
 
         stage('Package') {
             steps {
