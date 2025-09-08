@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo "Checking out source code..."
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                echo "Installing dependencies..."
+                sh 'pip3 install -r requirements.txt'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "Running the Python script..."
+                sh 'python3 app.py'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "Running unit tests..."
+                sh 'python3 -m pytest --maxfail=1 --disable-warnings -q --junitxml=pytest-results.xml'
+            }
+        }
+
+        stage('Archive Results') {
+            steps {
+                echo "Archiving test reports..."
+                junit 'pytest-results.xml'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline finished!"
+        }
+    }
+}
