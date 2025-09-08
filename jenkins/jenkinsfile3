@@ -47,10 +47,10 @@ pipeline {
             agent { label 'Slave2' }  // Run Docker stage on a node with Docker
             steps {
                 echo "Building Docker image..."
-                sh 'docker build -t myapp:latest .'
+                sh 'sudo docker build -t myapp:latest .'
 
                 echo "Running container..."
-                sh 'docker run --rm myapp:latest'
+                sh 'sudo docker run --rm myapp:latest'
             }
         }
 
