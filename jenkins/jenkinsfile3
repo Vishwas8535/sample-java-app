@@ -1,1 +1,75 @@
+pipeline {
+    agent none  // Top-level agent is none because we'll define agent per stage
+
+    stages {
+        stage('Checkout') {
+            agent { label 'Slave1' }  // Run on Linux node
+            steps {
+                echo "Checking out code on Linux node..."
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            agent { label 'Slave2' }  // Can use same or different node
+            steps {
+                echo "Building application on Linux node..."
+                sh 'mkdir -p build'
+                sh 'echo "print(\\"Hello from Build Stage\\")" > build/app.py'
+            }
+        }
+
+        stage('Test') {
+            agent { label 'Slave2' }  // Run tests on Windows node
+            steps {
+                echo "Running unit tests on Windows node..."
+                bat 'python --version'
+                bat 'pip install pytest --quiet'
+                bat 'echo def test_add():\\n    assert 2 + 3 == 5 > test_app.py'
+                bat 'python -m pytest --maxfail=1 --disable-warnings -q'
+            }
+        }
+
+        stage('Package') {
+            agent { label 'Slave1' }  // Package stage on Linux
+            steps {
+                echo "Packaging application..."
+                sh 'tar -czf myapp.tar.gz build/'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'myapp.tar.gz', fingerprint: true
+                }
+            }
+        }
+
+        stage('Docker Build & Run') {
+            agent { label 'Slave2' }  // Run Docker stage on a node with Docker
+            steps {
+                echo "Building Docker image..."
+                sh 'docker build -t myapp:latest .'
+
+                echo "Running container..."
+                sh 'docker run --rm myapp:latest'
+            }
+        }
+
+        stage('Deploy') {
+            agent { label 'Slave1' }
+            steps {
+                echo "Deploying application..."
+                sh 'echo "Deploying myapp.tar.gz to Dev environment"'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline executed successfully!"
+        }
+        failure {
+            echo "Pipeline failed!"
+        }
+    }
+}
 
