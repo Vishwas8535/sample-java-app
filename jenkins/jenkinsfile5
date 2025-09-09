@@ -8,9 +8,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Vishwas8535/sample-java-app.git',
-                    credentialsId: 'your-credentials-id'
+                echo "Checking out source code..."
+                checkout scm
             }
         }
 
