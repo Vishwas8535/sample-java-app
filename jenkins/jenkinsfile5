@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Notify') {
             steps {
-                echo 'Deployment completed successfully!'
+                echo 'Deployment completed successfully'
     }
 
 }
