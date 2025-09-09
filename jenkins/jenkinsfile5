@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    triggers {
+        githubPush()   // listens for GitHub webhook events
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/Vishwas8535/sample-java-app.git',
+                    credentialsId: 'your-credentials-id'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh 'mvn clean package'   // if using Maven
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+                sh 'mvn test'
+            }
+        }
+
+        stage('Docker Build & Push') {
+            steps {
+                script {
+                    docker.build("vishwas8535/myapp:latest")
+                        .push()
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying container...'
+                sh 'docker run -d -p 9090:8080 --name my_app_container vishwas8535/myapp:latest || true'
+            }
+        }
+    }
+}
