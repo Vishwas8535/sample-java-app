@@ -1,3 +1,6 @@
+
+
+
 pipeline {
     agent any
 
@@ -16,7 +19,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building the project...'
-                sh 'mvn clean package'   // if using Maven
+                sh 'mvn clean package'   
             }
         }
 
