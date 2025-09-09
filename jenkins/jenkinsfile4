@@ -15,15 +15,19 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+       stage('Run Container in Background') {
             steps {
                 script {
-                    echo "Running Docker container..."
-                    // Run container and execute a command inside (e.g., run app)
-                    sh "docker run --rm ${DOCKER_IMAGE} echo 'Container started successfully!'"
+                    echo "Starting container in detached mode..."
+                    // Stop and remove old container if it exists
+                    sh "docker stop my_app_container || true"
+                    sh "docker rm my_app_container || true"
+                    // Run fresh container
+                    sh "docker run -d -p 9090:8080 --name my_app_container ${DOCKER_IMAGE}"
                 }
             }
         }
+
 
         stage('Run Container in Background') {
             steps {
