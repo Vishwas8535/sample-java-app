@@ -1,1 +1,43 @@
+pipeline {
+    agent any
+
+    environment {
+        NEXUS_URL = 'http://localhost:8081/repository/sample-maven/'
+        NEXUS_CREDENTIALS = 'nexus-cred'   // Jenkins credential ID
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/vishwas8535/sample-java-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Upload to Nexus') {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: 'localhost:8081',
+                    groupId: 'com.mycompany.app',
+                    version: '1.0.0',
+                    repository: 'maven-releases',
+                    credentialsId: "${NEXUS_CREDENTIALS}",
+                    artifacts: [[
+                        artifactId: 'sample-java-app',
+                        classifier: '',
+                        file: 'target/sample-java-app-1.0-SNAPSHOT.jar',
+                        type: 'jar'
+                    ]]
+                )
+            }
+        }
+    }
+}
 
