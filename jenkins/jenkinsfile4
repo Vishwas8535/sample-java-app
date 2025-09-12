@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'Slave1' }
+    agent any
 
     environment {
         DOCKER_IMAGE = "vishwas8535/myapp:latest"
