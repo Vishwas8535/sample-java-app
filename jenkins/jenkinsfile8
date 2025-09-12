@@ -1,12 +1,13 @@
 pipeline {
     agent any
     triggers {
-        cron('*/3 * * * *')  // Run at 0, 3, 6, 9... minutes every hour
+        cron('*/3 * * * *')  // Run every 3 minutes
     }
     stages {
         stage('Build') {
             steps {
-                echo "🔨 Building the project at $(date)..."
+                echo "🔨 Building the project..."
+                sh 'date'   // Run the date command properly
             }
         }
 
