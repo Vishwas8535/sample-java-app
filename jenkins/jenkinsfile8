@@ -1,46 +1,24 @@
 pipeline {
     agent any
     triggers {
-        cron('H/3 * * * *')  // Run every 3 minutes
+        cron('*/3 * * * *')  // Run at 0, 3, 6, 9... minutes every hour
     }
     stages {
         stage('Build') {
             steps {
-                echo "🔨 Building the project..."
-                // Example: compile or package
-                sh 'echo Simulating build step'
+                echo "🔨 Building the project at $(date)..."
             }
         }
 
-        stage('Unit Tests') {
+        stage('Test') {
             steps {
-                echo "🧪 Running unit tests..."
-                // Example: pytest, JUnit, Maven test
-                sh 'echo Simulating unit tests'
-            }
-        }
-
-        stage('Static Analysis') {
-            steps {
-                echo "🔍 Running static code analysis..."
-                // Example: linting, SonarQube, style checks
-                sh 'echo Simulating static analysis'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                echo "📦 Packaging the application..."
-                // Example: build a JAR, Docker image, zip, etc.
-                sh 'echo Simulating packaging step'
+                echo "🧪 Running tests..."
             }
         }
 
         stage('Deploy') {
             steps {
-                echo "🚀 Deploying to staging environment..."
-                // Example: deploy to test server or container
-                sh 'echo Simulating deployment step'
+                echo "🚀 Deploying application..."
             }
         }
     }
@@ -48,11 +26,6 @@ pipeline {
         always {
             echo "✅ Pipeline finished (success or failure)."
         }
-        success {
-            echo "🎉 Build succeeded!"
-        }
-        failure {
-            echo "❌ Build failed!"
-        }
     }
 }
+
